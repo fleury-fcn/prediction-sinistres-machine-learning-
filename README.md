@@ -284,6 +284,8 @@ contributing most strongly to model predictions.
 
 ## 📈 Results & Interpretation
 
+![Dashboard des résultats](results/random_forest_sinistres.png)
+
 With the current configuration using only four numerical features:
 
 -   Age
@@ -459,18 +461,14 @@ reproducible Machine Learning experimentation.
 📍 Lille, France
 
 ------------------------------------------------------------------------
-
 ## 📫 Let's Connect
 
-```{=html}
-<p align="left">
-```
-`<a href="https://www.linkedin.com/in/fleury-niyokwizera-2a9436291/">`{=html}
-`<img src="https://img.shields.io/badge/LinkedIn-Connect%20with%20me-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white"/>`{=html}
-`</a>`{=html}
-```{=html}
+<p>
+  <a href="https://www.linkedin.com/in/fleury-niyokwizera-2a9436291/">
+    <img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white"/>
+  </a>
 </p>
-```
+
 
 ------------------------------------------------------------------------
 
