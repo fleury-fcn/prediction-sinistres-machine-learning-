@@ -1,140 +1,479 @@
-# Prédiction des sinistres — Random Forest
+# 🛡️ Insurance Claim & Fraud Prediction
 
-Pipeline de machine learning pour prédire la survenance d'un sinistre à partir
-de données d'assurance (âge de l'assuré, capital assuré, prime, durée du contrat).
+> An end-to-end Machine Learning pipeline for insurance risk analysis,
+> claim prediction and fraud detection using statistical modeling and
+> Random Forest.
 
-![Dashboard des résultats](results/random_forest_sinistres.png)
+![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![Scikit-Learn](https://img.shields.io/badge/Scikit--Learn-Machine%20Learning-F7931E?style=for-the-badge&logo=scikit-learn&logoColor=white)
+![Pandas](https://img.shields.io/badge/Pandas-Data%20Analysis-150458?style=for-the-badge&logo=pandas&logoColor=white)
+![Status](https://img.shields.io/badge/Status-Active-success?style=for-the-badge)
 
-## Contexte
+------------------------------------------------------------------------
 
-Le modèle traite un problème de classification binaire déséquilibré. Le
-pipeline compare un modèle de référence (régression logistique) à une forêt
-aléatoire optimisée par recherche d'hyperparamètres, et détermine un seuil de
-décision adapté au déséquilibre des classes plutôt que le seuil par défaut
-de 0.5.
+## 📌 Overview
 
-## Jeu de données
+This project implements a complete and reproducible Machine Learning
+pipeline for insurance risk modeling.
 
-Le projet est livré avec le dataset **`insurance_claims`** (Derrick Mwiti,
-[GitHub](https://github.com/mwitiderrick/insurancedata)) : 1000 sinistres
-auto réels, cible = fraude déclarée (`fraud_reported`, ~25% de fraudes).
+The pipeline processes insurance data, performs preprocessing and
+feature engineering, compares a Logistic Regression baseline with an
+optimized Random Forest classifier, and evaluates model performance
+using metrics designed for imbalanced classification.
 
-Comme ce dataset ne contient que des sinistres déjà survenus (pas de contrats
-sans sinistre), la cible binaire n'est pas "y a-t-il eu un sinistre ?" mais
-"le sinistre est-il frauduleux ?" — c'est l'adaptation la plus fidèle possible
-à la structure de classification déséquilibrée du projet d'origine avec un
-jeu de données réel et librement accessible.
+The project is designed with a modular architecture so that different
+insurance datasets can be integrated without rewriting the entire
+pipeline.
 
-**Mapping des colonnes** (défini dans `src/config.py`, `RENAME_MAP`) :
+------------------------------------------------------------------------
 
-| Colonne source            | Colonne interne      |
-|----------------------------|-----------------------|
-| `age`                      | `AGE_ASSURE`          |
-| `months_as_customer`       | `DUREE_MOIS_CONTRAT`  |
-| `policy_annual_premium`    | `PRIME`               |
-| `umbrella_limit`           | `CAPITAL_ASSURE`      |
-| `total_claim_amount`       | `SINISTRE_REGLE` (informatif) |
-| `fraud_reported` (Y/N)     | cible (`TARGET_MODE = "label"`) |
+## 🎯 Objectives
 
-Pour rebrancher un autre dataset (y compris ton fichier `donnees_sinistres.csv`
-d'origine avec `DATE_NAISSANCE_CLIENT`/`DATE_EFFET`/`SINISTRE_REGLE`), il
-suffit de modifier `RENAME_MAP` et `TARGET_MODE` dans `config.py` — le reste
-du pipeline n'a pas besoin d'être touché. Avec `TARGET_MODE = "amount_threshold"`,
-le pipeline retrouve le comportement d'origine (cible = 1 si montant réglé > 0).
+-   Build a reproducible Machine Learning pipeline for insurance data
+-   Compare Logistic Regression with Random Forest
+-   Handle imbalanced binary classification
+-   Optimize Random Forest hyperparameters
+-   Optimize the classification decision threshold
+-   Evaluate model performance using robust metrics
+-   Generate predictions and reusable model artifacts
+-   Provide interpretable feature importance
 
-**Limite connue** : avec seulement 4 variables numériques (âge, capital,
-prime, durée), l'AUC obtenue sur ce dataset est proche de 0.50 — ces
-variables ne suffisent pas à prédire la fraude, qui dépend surtout du
-contexte de l'incident (type de collision, gravité, témoins, déclarations).
-C'est attendu : ce dataset sert ici de test de compatibilité pour le pipeline,
-pas de démonstration de performance. Pour un vrai cas d'usage fraude, ajoute
-`incident_severity`, `witnesses`, `police_report_available`, etc. à
-`CANDIDATE_FEATURES` (après encodage des variables catégorielles).
+------------------------------------------------------------------------
 
-## Structure du projet
+## 🧠 Machine Learning Approach
 
+### Logistic Regression
+
+Logistic Regression is used as a baseline statistical model.
+
+It provides an interpretable reference against which the Random Forest
+model can be evaluated.
+
+Class imbalance is addressed using:
+
+``` python
+class_weight="balanced"
 ```
-prediction-sinistres-machine-learning/
+
+### Random Forest
+
+The main Machine Learning model is a Random Forest classifier.
+
+Hyperparameters are optimized using:
+
+``` text
+RandomizedSearchCV
+```
+
+Configuration:
+
+-   30 randomized parameter combinations
+-   5-fold stratified cross-validation
+-   F1-score optimization
+
+------------------------------------------------------------------------
+
+## ⚖️ Handling Class Imbalance
+
+Insurance classification problems can contain significantly fewer
+positive observations than negative observations.
+
+Using the default probability threshold of `0.50` can therefore lead to
+poor minority-class detection.
+
+This project evaluates the Precision-Recall relationship and selects a
+decision threshold designed to maximize the F1-score.
+
+  Metric      Purpose
+  ----------- --------------------------------------
+  Accuracy    Overall classification performance
+  Precision   Reliability of positive predictions
+  Recall      Ability to detect positive cases
+  F1-score    Balance between precision and recall
+  ROC-AUC     Model discrimination ability
+
+------------------------------------------------------------------------
+
+## 📊 Dataset
+
+The project supports the publicly available Insurance Claims Fraud
+Dataset by Derrick Mwiti.
+
+Dataset: https://github.com/mwitiderrick/insurancedata
+
+The dataset contains approximately 1,000 automobile insurance claims
+with a binary `fraud_reported` target. Approximately 25% of observations
+are labeled as fraudulent.
+
+### Important modeling consideration
+
+The public dataset contains claims that have already occurred.
+
+Therefore, with this dataset, the prediction target is:
+
+> **Is the reported claim fraudulent?**
+
+rather than:
+
+> **Will a policyholder experience a claim?**
+
+Claim-occurrence prediction requires policy-level observations
+containing both claims and non-claims.
+
+------------------------------------------------------------------------
+
+## 🔄 Target Modes
+
+### Fraud Detection
+
+``` python
+TARGET_MODE = "label"
+```
+
+Target: `fraud_reported`
+
+This mode predicts whether an existing claim is fraudulent.
+
+### Claim Occurrence
+
+``` python
+TARGET_MODE = "amount_threshold"
+```
+
+Target:
+
+``` text
+SINISTRE_CIBLE = 1 if SINISTRE_REGLE > 0
+```
+
+This mode can be used with a policy-level dataset containing both claims
+and non-claims.
+
+------------------------------------------------------------------------
+
+## 🗂️ Feature Mapping
+
+Dataset-specific mappings are centralized in `src/config.py`.
+
+  -------------------------------------------------------------------------
+  Source Column             Internal Feature        Description
+  ------------------------- ----------------------- -----------------------
+  `age`                     `AGE_ASSURE`            Age of the insured
+
+  `months_as_customer`      `DUREE_MOIS_CONTRAT`    Customer / contract
+                                                    duration
+
+  `policy_annual_premium`   `PRIME`                 Annual insurance
+                                                    premium
+
+  `umbrella_limit`          `CAPITAL_ASSURE`        Insured capital
+
+  `total_claim_amount`      `SINISTRE_REGLE`        Claim amount
+
+  `fraud_reported`          Target                  Fraud label
+  -------------------------------------------------------------------------
+
+To adapt the pipeline to another dataset, modify `RENAME_MAP` and
+`TARGET_MODE` in `src/config.py`.
+
+------------------------------------------------------------------------
+
+## 🏗️ Project Structure
+
+``` text
+insurance-claim-prediction/
 │
 ├── data/
-│   └── donnees_sinistres.csv       # Données brutes (non versionné si sensible)
+│   └── donnees_sinistres.csv
 │
 ├── src/
-│   ├── config.py                   # Toute la configuration du pipeline
-│   ├── data_loading.py             # Chargement et validation du CSV
-│   ├── preprocessing.py            # Nettoyage, feature engineering
-│   ├── model.py                    # Entraînement, recherche d'hyperparamètres, CV
-│   ├── evaluation.py               # Métriques, seuil optimal, importance
-│   ├── visualization.py            # Génération du dashboard graphique
-│   └── main.py                     # Point d'entrée (orchestration)
+│   ├── config.py
+│   ├── data_loading.py
+│   ├── preprocessing.py
+│   ├── model.py
+│   ├── evaluation.py
+│   ├── visualization.py
+│   └── main.py
 │
 ├── results/
 │   ├── random_forest_sinistres.png
 │   ├── predictions_random_forest.csv
 │   ├── importance_variables.csv
-│   └── random_forest_model.joblib  # Modèle entraîné, réutilisable
+│   └── random_forest_model.joblib
 │
 ├── notebooks/
-│   └── analyse_sinistres.ipynb     # Exploration libre, hors pipeline de prod
+│   └── analyse_sinistres.ipynb
 │
 ├── requirements.txt
 ├── .gitignore
 └── README.md
 ```
 
-## Installation
+------------------------------------------------------------------------
 
-```bash
-git clone <url-du-repo>
-cd prediction-sinistres-machine-learning
+## 🔬 Methodology
+
+``` text
+Raw Insurance Data
+        │
+        ▼
+Data Loading & Validation
+        │
+        ▼
+Data Cleaning
+        │
+        ▼
+Feature Engineering
+        │
+        ▼
+Stratified Validation
+        │
+        ├──────────────────┐
+        ▼                  ▼
+Logistic Regression   Random Forest
+Baseline              + Hyperparameter Search
+        │                  │
+        └────────┬─────────┘
+                 ▼
+          Cross-Validation
+                 │
+                 ▼
+          Model Evaluation
+                 │
+                 ▼
+      Precision-Recall Analysis
+                 │
+                 ▼
+      Decision Threshold Selection
+                 │
+                 ▼
+       Predictions & Artifacts
+```
+
+### Data preprocessing
+
+The pipeline performs:
+
+-   Column normalization
+-   Data type validation
+-   Date parsing when applicable
+-   Missing-value handling
+-   Outlier detection
+-   Feature engineering
+-   Feature selection
+
+### Model training
+
+A balanced Logistic Regression model establishes a statistical
+benchmark. Random Forest hyperparameters are optimized using
+`RandomizedSearchCV` with stratified 5-fold cross-validation and
+F1-score optimization.
+
+### Decision threshold
+
+Instead of automatically using `0.50`, the pipeline evaluates
+probability thresholds using Precision-Recall analysis. This is
+particularly relevant for imbalanced classification.
+
+### Model interpretation
+
+Random Forest feature importance is extracted to identify the variables
+contributing most strongly to model predictions.
+
+------------------------------------------------------------------------
+
+## 📈 Results & Interpretation
+
+With the current configuration using only four numerical features:
+
+-   Age
+-   Insured capital
+-   Premium
+-   Contract duration
+
+the ROC-AUC obtained for fraud prediction is close to `0.50`.
+
+This indicates that these variables alone provide limited information
+for distinguishing fraudulent from non-fraudulent claims.
+
+This result is expected because fraud is strongly influenced by
+contextual information surrounding the incident.
+
+Potentially useful features include:
+
+-   Incident severity
+-   Type of collision
+-   Number of witnesses
+-   Police report availability
+-   Accident location
+-   Vehicle characteristics
+-   Previous claims
+-   Customer history
+-   Policy characteristics
+
+> **Model performance depends not only on the algorithm, but also on the
+> quality and predictive power of the available features.**
+
+------------------------------------------------------------------------
+
+## 📊 Generated Outputs
+
+### Trained model
+
+`random_forest_model.joblib` --- reusable trained Random Forest model.
+
+### Predictions
+
+`predictions_random_forest.csv` --- predicted classes and probabilities.
+
+### Feature importance
+
+`importance_variables.csv` --- ranking of the variables used by the
+model.
+
+### Visualization
+
+`random_forest_sinistres.png` --- model evaluation visualizations
+including confusion matrix, ROC curve, feature importance and
+performance metrics.
+
+------------------------------------------------------------------------
+
+## ⚙️ Installation
+
+Clone the repository:
+
+``` bash
+git clone <YOUR_REPOSITORY_URL>
+cd insurance-claim-prediction
+```
+
+Create a virtual environment:
+
+``` bash
 python3 -m venv venv
-source venv/bin/activate      # Windows : venv\Scripts\activate
+```
+
+macOS / Linux:
+
+``` bash
+source venv/bin/activate
+```
+
+Windows:
+
+``` bash
+venv\Scripts\activate
+```
+
+Install dependencies:
+
+``` bash
 pip install -r requirements.txt
 ```
 
-## Utilisation
+------------------------------------------------------------------------
 
-Placer `donnees_sinistres.csv` dans `data/`, puis :
+## ▶️ Usage
 
-```bash
-# Pipeline complet avec recherche d'hyperparamètres (plus lent, plus précis)
-python -m src.main
+Place the dataset inside:
 
-# Version rapide sans recherche d'hyperparamètres
-python -m src.main --skip-search
-
-# Chemin de données personnalisé
-python -m src.main --data data/mon_fichier.csv
+``` text
+data/donnees_sinistres.csv
 ```
 
-## Méthodologie
+Run the complete pipeline:
 
-1. **Nettoyage** : normalisation des noms de colonnes, parsing des dates,
-   calcul de l'âge de l'assuré avec détection des valeurs aberrantes.
-2. **Variable cible** : `SINISTRE_CIBLE` = 1 si `SINISTRE_REGLE` > 0.
-3. **Modèle de référence** : régression logistique (`class_weight="balanced"`)
-   pour évaluer l'apport réel du Random Forest.
-4. **Random Forest** : recherche d'hyperparamètres par `RandomizedSearchCV`
-   (30 itérations, validation croisée à 5 plis, optimisée sur le F1-score).
-5. **Validation croisée** : accuracy, precision, recall, F1, AUC-ROC calculés
-   sur 5 plis stratifiés pour une estimation robuste (pas un simple split).
-6. **Seuil de décision** : recherche du seuil qui maximise le F1-score via la
-   courbe précision-rappel, plutôt que d'utiliser 0.5 par défaut — pertinent
-   ici car les classes sont déséquilibrées.
-7. **Sauvegarde** : modèle (`joblib`), prédictions, importance des variables
-   et dashboard graphique (matrice de confusion, ROC, importance, résidus,
-   performances).
+``` bash
+python -m src.main
+```
 
-## Limites connues et pistes d'amélioration
+Fast mode without hyperparameter optimization:
 
-- Seulement 4 variables explicatives disponibles actuellement ; l'ajout de
-  variables (type de contrat, zone géographique, historique de sinistres)
-  améliorerait probablement la performance.
-- L'imputation des valeurs manquantes se fait par la médiane globale ; une
-  imputation par sous-groupe (ex. par tranche d'âge) pourrait être plus fine.
-- Le modèle n'est pas encore exposé via une API ; une prochaine étape possible
-  est un service FastAPI chargeant `random_forest_model.joblib`.
+``` bash
+python -m src.main --skip-search
+```
 
-## Auteur
+Custom dataset:
 
-Fleury — Master en Statistique Appliquée et Informatique Décisionnelle
+``` bash
+python -m src.main --data data/my_dataset.csv
+```
+
+------------------------------------------------------------------------
+
+## 🔧 Configuration
+
+Most pipeline parameters are centralized in `src/config.py`, including:
+
+-   Feature mapping
+-   Target definition
+-   Candidate features
+-   Random Forest parameters
+-   Cross-validation settings
+-   Hyperparameter search
+-   Decision threshold strategy
+-   Output paths
+
+This design makes the pipeline easier to maintain, test and adapt to new
+insurance datasets.
+
+------------------------------------------------------------------------
+
+## 🚀 Future Improvements
+
+-   Add richer insurance and incident features
+-   Evaluate XGBoost, LightGBM and Gradient Boosting
+-   Add SHAP for Explainable AI
+-   Expose the model through FastAPI
+-   Build a Streamlit prediction application
+-   Add Docker and CI/CD
+-   Add model monitoring
+-   Deploy the application to the cloud
+
+------------------------------------------------------------------------
+
+## ⚠️ Limitations
+
+-   The current feature set contains a limited number of numerical
+    variables.
+-   The public dataset contains claims that have already occurred.
+-   Fraud detection is different from claim-occurrence prediction.
+-   Median imputation is currently applied globally.
+-   The model is not yet exposed through a production API.
+-   The current features are insufficient for strong fraud
+    discrimination.
+
+These limitations are explicitly documented to ensure transparent and
+reproducible Machine Learning experimentation.
+
+------------------------------------------------------------------------
+
+## 👨‍💻 Author
+
+**Fleury Niyokwizera**
+
+🎓 Master's Student in Applied Mathematics & Statistics\
+🤖 Aspiring AI Engineer\
+📊 Machine Learning · Data Science · Statistical Modeling\
+📍 Lille, France
+
+------------------------------------------------------------------------
+
+## 📫 Let's Connect
+
+```{=html}
+<p align="left">
+```
+`<a href="https://www.linkedin.com/in/fleury-niyokwizera-2a9436291/">`{=html}
+`<img src="https://img.shields.io/badge/LinkedIn-Connect%20with%20me-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white"/>`{=html}
+`</a>`{=html}
+```{=html}
+</p>
+```
+
+------------------------------------------------------------------------
+
+⭐ **If you find this project interesting, feel free to explore the
+repository and follow my work in AI, Machine Learning and Data
+Science.**
