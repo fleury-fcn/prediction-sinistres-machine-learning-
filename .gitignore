@@ -6,7 +6,7 @@ venv/
 *.egg-info/
 
 # Données et résultats volumineux (à adapter selon ta politique de repo)
-results/*.png
-results/*.csv
-results/*.joblib
+# results/*.png
+# results/*.csv
+# results/*.joblib
 !results/.gitkeep
