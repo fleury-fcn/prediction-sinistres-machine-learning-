@@ -3,7 +3,7 @@
 Pipeline de machine learning pour prédire la survenance d'un sinistre à partir
 de données d'assurance (âge de l'assuré, capital assuré, prime, durée du contrat).
 
-[Dashboard des résultats](results/random_forest_sinistres.png)
+![Dashboard des résultats](results/random_forest_sinistres.png)
 
 ## Contexte
 
