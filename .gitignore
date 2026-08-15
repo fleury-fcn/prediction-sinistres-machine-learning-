@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+venv/
+.venv/
+*.egg-info/
+
+# Données et résultats volumineux (à adapter selon ta politique de repo)
+results/*.png
+results/*.csv
+results/*.joblib
+!results/.gitkeep
