@@ -451,24 +451,16 @@ reproducible Machine Learning experimentation.
 
 ------------------------------------------------------------------------
 
-## 👨‍💻 Author
+## 👤 Author
 
-**Fleury Niyokwizera**
+<img src="https://github.com/fleury-fcn.png" width="100" style="border-radius: 50%;" alt="Fleury Niyokwizera" />
 
-🎓 Master's Student in Applied Mathematics & Statistics\
-🤖 Aspiring AI Engineer\
-📊 Machine Learning · Data Science · Statistical Modeling\
-📍 Lille, France
+**Fleury NIYOKWIZERA**
+Master 1 in Applied Statistics and Decision-Making Computer Science – ISTA, University of Burundi
+Currently pursuing a Master's in Data Modeling (Artificial Intelligence track) – University of Lille
 
-------------------------------------------------------------------------
-## 📫 Let's Connect
-
-<p>
-  <a href="https://www.linkedin.com/in/fleury-niyokwizera-2a9436291/">
-    <img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white"/>
-  </a>
-</p>
-
+[![GitHub](https://img.shields.io/badge/GitHub-fleury--fcn-181717?style=flat&logo=github&logoColor=white)](https://github.com/fleury-fcn)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Fleury_Niyokwizera-0A66C2?style=flat&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/fleury-niyokwizera-2a9436291)
 
 ------------------------------------------------------------------------
 
