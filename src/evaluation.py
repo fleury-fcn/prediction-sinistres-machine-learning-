@@ -74,6 +74,15 @@ def feature_importance(model, feature_names: list[str]) -> pd.DataFrame:
     return importance.sort_values("Importance", ascending=False)
 
 
+def linear_feature_importance(model, feature_names: list[str]) -> pd.DataFrame:
+    coefficients = np.abs(model.coef_).ravel()
+    importance = pd.DataFrame({
+        "Variable": feature_names,
+        "Importance": coefficients,
+    })
+    return importance.sort_values("Importance", ascending=False)
+
+
 def prediction_report(y_true, y_proba, y_pred) -> pd.DataFrame:
     results = pd.DataFrame({
         "Valeur_reelle": y_true.values if hasattr(y_true, "values") else y_true,

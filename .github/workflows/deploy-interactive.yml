@@ -1,0 +1,72 @@
+name: Deploy Interactive Results to GitHub Pages
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Prepare site artifact
+        run: |
+          mkdir -p _site/interactive
+          cp -R results/interactive/* _site/interactive/ || true
+
+          cat > _site/index.html << 'EOF'
+          <!doctype html>
+          <html lang="fr">
+            <head>
+              <meta charset="utf-8" />
+              <meta name="viewport" content="width=device-width, initial-scale=1" />
+              <title>Interactive ML Results</title>
+              <style>
+                body { font-family: Arial, sans-serif; margin: 2rem; }
+                h1 { margin-bottom: 0.25rem; }
+                a { display: block; margin: 0.5rem 0; font-size: 1.05rem; }
+              </style>
+            </head>
+            <body>
+              <h1>Résultats interactifs</h1>
+              <p>Visualisations Plotly exportées automatiquement depuis le pipeline.</p>
+              <a href="./interactive/roc_comparative.html">📈 Courbes ROC comparatives</a>
+              <a href="./interactive/confusion_regression_logistique.html">🧩 Matrice de confusion — Régression Logistique</a>
+              <a href="./interactive/confusion_random_forest.html">🧩 Matrice de confusion — Random Forest</a>
+              <a href="./interactive/importance_regression_logistique.html">📊 Feature importances — Régression Logistique</a>
+              <a href="./interactive/importance_random_forest.html">📊 Feature importances — Random Forest</a>
+              <a href="./interactive/shap_scatter_random_forest.html">✨ Scatter SHAP interactif</a>
+            </body>
+          </html>
+          EOF
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

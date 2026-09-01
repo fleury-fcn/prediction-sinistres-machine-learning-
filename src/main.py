@@ -7,7 +7,11 @@ Usage :
 """
 
 import argparse
+import importlib
 import logging
+
+import numpy as np
+import pandas as pd
 
 from . import config, data_loading, evaluation, model, preprocessing, visualization
 
@@ -17,6 +21,32 @@ logging.basicConfig(
     datefmt="%H:%M:%S",
 )
 logger = logging.getLogger(__name__)
+
+MODEL_BASELINE = "Régression Logistique"
+MODEL_RF = "Random Forest"
+
+
+def _compute_tree_shap_values(trained_model, x_sample: pd.DataFrame) -> np.ndarray:
+    try:
+        shap_module = importlib.import_module("shap")
+        explainer = shap_module.TreeExplainer(trained_model)
+        shap_values = explainer.shap_values(x_sample)
+
+        if isinstance(shap_values, list):
+            return np.asarray(shap_values[1])
+
+        shap_array = np.asarray(shap_values)
+        if shap_array.ndim == 3:
+            return shap_array[:, :, 1]
+
+        return shap_array
+    except Exception as exc:  # pragma: no cover - dépend de l'environnement
+        logger.warning("SHAP indisponible (%s), utilisation d'une approximation locale.", exc)
+        centered = x_sample - x_sample.median(numeric_only=True)
+        scales = x_sample.std(numeric_only=True).replace(0, 1)
+        normalized = centered.divide(scales, axis=1).fillna(0)
+        weights = np.asarray(getattr(trained_model, "feature_importances_", np.ones(x_sample.shape[1])))
+        return normalized.to_numpy() * weights
 
 
 def parse_args():
@@ -45,14 +75,18 @@ def main():
     # 4. Baseline
     baseline = model.train_baseline(X_train, y_train)
     baseline_proba = baseline.predict_proba(X_test)[:, 1]
-    baseline_auc = evaluation.roc_auc_score(y_test, baseline_proba)
-    logger.info("AUC baseline (régression logistique) : %.3f", baseline_auc)
+    baseline_threshold = evaluation.find_optimal_threshold(y_test, baseline_proba)
+    baseline_pred = (baseline_proba >= baseline_threshold).astype(int)
+    baseline_metrics = evaluation.compute_metrics(y_test, baseline_pred, baseline_proba)
+    logger.info("Métriques baseline (régression logistique) : %s",
+                {k: round(v, 3) for k, v in baseline_metrics.items()})
 
     # 5. Random Forest (avec ou sans recherche d'hyperparamètres)
     if args.skip_search:
         from sklearn.ensemble import RandomForestClassifier
         rf = RandomForestClassifier(
             n_estimators=300, class_weight="balanced",
+            min_samples_leaf=1, max_features="sqrt",
             random_state=config.RANDOM_STATE, n_jobs=-1,
         )
         rf.fit(X_train, y_train)
@@ -66,18 +100,18 @@ def main():
         logger.info("  %-10s %.3f (+/- %.3f)", metric, mean, std)
 
     # 7. Prédictions test set
-    y_proba = rf.predict_proba(X_test)[:, 1]
+    rf_proba = rf.predict_proba(X_test)[:, 1]
 
     # 8. Seuil optimal
-    best_threshold = evaluation.find_optimal_threshold(y_test, y_proba)
-    y_pred_default = (y_proba >= 0.5).astype(int)
-    y_pred_optimal = (y_proba >= best_threshold).astype(int)
+    rf_threshold = evaluation.find_optimal_threshold(y_test, rf_proba)
+    y_pred_default = (rf_proba >= 0.5).astype(int)
+    y_pred_optimal = (rf_proba >= rf_threshold).astype(int)
 
-    metrics_default = evaluation.compute_metrics(y_test, y_pred_default, y_proba)
-    metrics_optimal = evaluation.compute_metrics(y_test, y_pred_optimal, y_proba)
+    metrics_default = evaluation.compute_metrics(y_test, y_pred_default, rf_proba)
+    metrics_optimal = evaluation.compute_metrics(y_test, y_pred_optimal, rf_proba)
 
     logger.info("Métriques @ seuil 0.5   : %s", {k: round(v, 3) for k, v in metrics_default.items()})
-    logger.info("Métriques @ seuil %.2f : %s", best_threshold,
+    logger.info("Métriques @ seuil %.2f : %s", rf_threshold,
                 {k: round(v, 3) for k, v in metrics_optimal.items()})
 
     # On garde le seuil optimal pour la suite (matrice, rapport)
@@ -85,23 +119,70 @@ def main():
     metrics = metrics_optimal
 
     # 9. Évaluation détaillée
-    cm = evaluation.compute_confusion(y_test, y_pred)
-    fpr, tpr, _ = evaluation.compute_roc_curve(y_test, y_proba)
-    importance = evaluation.feature_importance(rf, features)
-    results = evaluation.prediction_report(y_test, y_proba, y_pred)
+    cm_rf = evaluation.compute_confusion(y_test, y_pred)
+    cm_baseline = evaluation.compute_confusion(y_test, baseline_pred)
+    fpr_rf, tpr_rf, _ = evaluation.compute_roc_curve(y_test, rf_proba)
+    fpr_baseline, tpr_baseline, _ = evaluation.compute_roc_curve(y_test, baseline_proba)
+    rf_importance = evaluation.feature_importance(rf, features)
+    baseline_importance = evaluation.linear_feature_importance(baseline, features)
+    results = evaluation.prediction_report(y_test, rf_proba, y_pred)
+    shap_values = _compute_tree_shap_values(rf, X_test)
 
-    logger.info("Importance des variables :\n%s", importance)
+    logger.info("Importance des variables (Random Forest) :\n%s", rf_importance)
 
     # 10. Visualisation
     visualization.plot_dashboard(
-        cm=cm, fpr=fpr, tpr=tpr, auc=metrics["auc"],
-        importance=importance, results=results, metrics=metrics,
+        cm=cm_rf, fpr=fpr_rf, tpr=tpr_rf, auc=metrics["auc"],
+        importance=rf_importance, results=results, metrics=metrics,
         output_path=config.RESULTS_DIR / "random_forest_sinistres.png",
     )
 
+    interactive_files = visualization.export_interactive_visuals(
+        roc_by_model={
+            MODEL_BASELINE: {
+                "fpr": fpr_baseline,
+                "tpr": tpr_baseline,
+                "auc": baseline_metrics["auc"],
+            },
+            MODEL_RF: {
+                "fpr": fpr_rf,
+                "tpr": tpr_rf,
+                "auc": metrics["auc"],
+            },
+        },
+        confusion_by_model={
+            MODEL_BASELINE: cm_baseline,
+            MODEL_RF: cm_rf,
+        },
+        importance_by_model={
+            MODEL_BASELINE: baseline_importance,
+            MODEL_RF: rf_importance,
+        },
+        shap_values=shap_values,
+        X_test=X_test,
+        output_dir=config.INTERACTIVE_RESULTS_DIR,
+    )
+
+    comparison = pd.DataFrame([
+        {
+            "Modele": MODEL_BASELINE,
+            "Seuil": baseline_threshold,
+            **baseline_metrics,
+        },
+        {
+            "Modele": MODEL_RF,
+            "Seuil": rf_threshold,
+            **metrics,
+        },
+    ])
+
+    logger.info("Fichiers interactifs exportés : %s", list(interactive_files.keys()))
+
     # 11. Sauvegardes
     results.to_csv(config.RESULTS_DIR / "predictions_random_forest.csv", index=False)
-    importance.to_csv(config.RESULTS_DIR / "importance_variables.csv", index=False)
+    rf_importance.to_csv(config.RESULTS_DIR / "importance_variables.csv", index=False)
+    baseline_importance.to_csv(config.RESULTS_DIR / "importance_baseline.csv", index=False)
+    comparison.to_csv(config.RESULTS_DIR / "model_comparison_metrics.csv", index=False)
     model.save_model(rf)
 
     logger.info("Pipeline terminé avec succès. Résultats dans : %s", config.RESULTS_DIR)

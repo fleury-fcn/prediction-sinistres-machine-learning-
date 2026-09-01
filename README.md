@@ -9,6 +9,8 @@
 ![Pandas](https://img.shields.io/badge/Pandas-Data%20Analysis-150458?style=for-the-badge&logo=pandas&logoColor=white)
 ![Status](https://img.shields.io/badge/Status-Active-success?style=for-the-badge)
 
+[![🚀 Essayer la démo en direct](https://img.shields.io/badge/%F0%9F%9A%80%20Essayer%20la%20d%C3%A9mo%20en%20direct-Streamlit-red?style=for-the-badge)](https://prediction-sinistres-machine-learning.streamlit.app)
+
 ------------------------------------------------------------------------
 
 ## 📌 Overview
@@ -199,11 +201,25 @@ insurance-claim-prediction/
 │   ├── random_forest_sinistres.png
 │   ├── predictions_random_forest.csv
 │   ├── importance_variables.csv
-│   └── random_forest_model.joblib
+│   ├── importance_baseline.csv
+│   ├── model_comparison_metrics.csv
+│   ├── random_forest_model.joblib
+│   └── interactive/
+│       ├── roc_comparative.html
+│       ├── confusion_random_forest.html
+│       ├── importance_random_forest.html
+│       └── shap_scatter_random_forest.html
 │
 ├── notebooks/
 │   └── analyse_sinistres.ipynb
 │
+├── .streamlit/
+│   └── config.toml
+├── .github/
+│   └── workflows/
+│       └── deploy-interactive.yml
+├── streamlit_app.py
+├── runtime.txt
 ├── requirements.txt
 ├── .gitignore
 └── README.md
@@ -284,6 +300,43 @@ contributing most strongly to model predictions.
 
 ## 📈 Results & Interpretation
 
+GitHub Pages (visualisations interactives):
+
+`https://fleury-fcn.github.io/prediction-sinistres-machine-learning-/interactive/`
+
+### Tableau comparatif des modèles (Markdown)
+
+| Modèle | Seuil | Accuracy | Precision | Recall | F1 | ROC-AUC |
+|---|---:|---:|---:|---:|---:|---:|
+| Régression Logistique | 0.463 | 0.305 | 0.253 | 0.939 | 0.398 | 0.510 |
+| Random Forest | 0.123 | 0.325 | 0.261 | 0.959 | 0.410 | 0.497 |
+
+### Courbes ROC comparatives
+
+![ROC comparatives](results/interactive/roc_comparative.png)
+
+[📊 Voir la version interactive](https://fleury-fcn.github.io/prediction-sinistres-machine-learning-/interactive/roc_comparative.html)
+
+### Matrice de confusion — Random Forest
+
+![Matrice de confusion Random Forest](results/interactive/confusion_random_forest.png)
+
+[📊 Voir la version interactive](https://fleury-fcn.github.io/prediction-sinistres-machine-learning-/interactive/confusion_random_forest.html)
+
+### Feature importances — Random Forest
+
+![Feature importances Random Forest](results/interactive/importance_random_forest.png)
+
+[📊 Voir la version interactive](https://fleury-fcn.github.io/prediction-sinistres-machine-learning-/interactive/importance_random_forest.html)
+
+### Scatter SHAP interactif — Random Forest
+
+![Scatter SHAP Random Forest](results/interactive/shap_scatter_random_forest.png)
+
+[📊 Voir la version interactive](https://fleury-fcn.github.io/prediction-sinistres-machine-learning-/interactive/shap_scatter_random_forest.html)
+
+### Dashboard global (fallback statique)
+
 ![Dashboard des résultats](results/random_forest_sinistres.png)
 
 With the current configuration using only four numerical features:
@@ -333,6 +386,16 @@ Potentially useful features include:
 `importance_variables.csv` --- ranking of the variables used by the
 model.
 
+### Model comparison
+
+`model_comparison_metrics.csv` --- comparative metrics for Logistic
+Regression and Random Forest.
+
+### Interactive visuals
+
+`results/interactive/*.html` --- standalone Plotly dashboards exported
+with `fig.write_html()` and automatically published via GitHub Pages.
+
 ### Visualization
 
 `random_forest_sinistres.png` --- model evaluation visualizations
@@ -374,6 +437,8 @@ Install dependencies:
 pip install -r requirements.txt
 ```
 
+Recommended Python version for full SHAP support: `3.10` to `3.13`.
+
 ------------------------------------------------------------------------
 
 ## ▶️ Usage
@@ -400,6 +465,18 @@ Custom dataset:
 
 ``` bash
 python -m src.main --data data/my_dataset.csv
+```
+
+Launch the interactive Streamlit dashboard locally:
+
+``` bash
+streamlit run streamlit_app.py
+```
+
+After running the pipeline, interactive Plotly exports are available in:
+
+``` text
+results/interactive/
 ```
 
 ------------------------------------------------------------------------
@@ -451,16 +528,24 @@ reproducible Machine Learning experimentation.
 
 ------------------------------------------------------------------------
 
-## 👤 Author
+## 👨‍💻 Author
 
-<img src="https://github.com/fleury-fcn.png" width="100" style="border-radius: 50%;" alt="Fleury Niyokwizera" />
+**Fleury Niyokwizera**
 
-**Fleury NIYOKWIZERA**
-Master 1 in Applied Statistics and Business Intelligence – ISTA, University of Burundi 🇧🇮 
-Currently pursuing a Master's in Data Modeling (Artificial Intelligence track) – University of Lille France 🇫🇷 
+🎓 Master's Student in Applied Mathematics & Statistics\
+🤖 Aspiring AI Engineer\
+📊 Machine Learning · Data Science · Statistical Modeling\
+📍 Lille, France
 
-[![GitHub](https://img.shields.io/badge/GitHub-fleury--fcn-181717?style=flat&logo=github&logoColor=white)](https://github.com/fleury-fcn)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Fleury_Niyokwizera-0A66C2?style=flat&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/fleury-niyokwizera-2a9436291)
+------------------------------------------------------------------------
+## 📫 Let's Connect
+
+<p>
+  <a href="https://www.linkedin.com/in/fleury-niyokwizera-2a9436291/">
+    <img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white"/>
+  </a>
+</p>
+
 
 ------------------------------------------------------------------------
 

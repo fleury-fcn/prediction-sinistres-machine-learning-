@@ -13,9 +13,13 @@ ROOT_DIR = Path(__file__).resolve().parent.parent
 
 DATA_PATH = ROOT_DIR / "data" / "donnees_sinistres.csv"
 RESULTS_DIR = ROOT_DIR / "results"
+INTERACTIVE_RESULTS_DIR = RESULTS_DIR / "interactive"
 MODEL_PATH = RESULTS_DIR / "random_forest_model.joblib"
 
 RESULTS_DIR.mkdir(parents=True, exist_ok=True)
+INTERACTIVE_RESULTS_DIR.mkdir(parents=True, exist_ok=True)
+
+STREAMLIT_DEMO_URL = "https://prediction-sinistres-machine-learning.streamlit.app"
 
 # ------------------------------------------------------------
 # Colonnes
