@@ -8,8 +8,23 @@
 ![Scikit-Learn](https://img.shields.io/badge/Scikit--Learn-Machine%20Learning-F7931E?style=for-the-badge&logo=scikit-learn&logoColor=white)
 ![Pandas](https://img.shields.io/badge/Pandas-Data%20Analysis-150458?style=for-the-badge&logo=pandas&logoColor=white)
 ![Status](https://img.shields.io/badge/Status-Active-success?style=for-the-badge)
+[![Deploy Interactive Results to GitHub Pages](https://github.com/fleury-fcn/prediction-sinistres-machine-learning-/actions/workflows/deploy-interactive.yml/badge.svg)](https://github.com/fleury-fcn/prediction-sinistres-machine-learning-/actions/workflows/deploy-interactive.yml)
 
 [![🚀 Essayer la démo en direct](https://img.shields.io/badge/%F0%9F%9A%80%20Essayer%20la%20d%C3%A9mo%20en%20direct-Streamlit-red?style=for-the-badge)](https://prediction-sinistres-machine-learning.streamlit.app)
+
+## 🌍 Quick Access (FR/EN)
+
+### 🇫🇷 Français
+
+- Démo interactive Streamlit : <https://prediction-sinistres-machine-learning.streamlit.app>
+- Visualisations Plotly (GitHub Pages) : <https://fleury-fcn.github.io/prediction-sinistres-machine-learning-/interactive/>
+- Résultats lisibles directement dans ce README : tableau comparatif + PNG statiques.
+
+### 🇬🇧 English
+
+- Live Streamlit demo: <https://prediction-sinistres-machine-learning.streamlit.app>
+- Interactive Plotly pages: <https://fleury-fcn.github.io/prediction-sinistres-machine-learning-/interactive/>
+- This README includes quick static results: model table + PNG fallbacks.
 
 ------------------------------------------------------------------------
 
