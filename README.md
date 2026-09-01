@@ -17,13 +17,13 @@
 ### 🇫🇷 Français
 
 - Démo interactive Streamlit : en cours de déploiement (créer l'app depuis <https://share.streamlit.io>).
-- Visualisations Plotly (GitHub Pages) : <https://fleury-fcn.github.io/prediction-sinistres-machine-learning-/interactive/>
+- Visualisations Plotly (GitHub Pages) : <https://fleury-fcn.github.io/prediction-sinistres-machine-learning-/interactive/> *(après activation one-shot de Pages sur `gh-pages`)*.
 - Résultats lisibles directement dans ce README : tableau comparatif + PNG statiques.
 
 ### 🇬🇧 English
 
 - Live Streamlit demo: deployment pending (create the app from <https://share.streamlit.io>).
-- Interactive Plotly pages: <https://fleury-fcn.github.io/prediction-sinistres-machine-learning-/interactive/>
+- Interactive Plotly pages: <https://fleury-fcn.github.io/prediction-sinistres-machine-learning-/interactive/> *(after one-time Pages activation on `gh-pages`)*.
 - This README includes quick static results: model table + PNG fallbacks.
 
 ------------------------------------------------------------------------
