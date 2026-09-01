@@ -10,19 +10,19 @@
 ![Status](https://img.shields.io/badge/Status-Active-success?style=for-the-badge)
 [![Deploy Interactive Results to GitHub Pages](https://github.com/fleury-fcn/prediction-sinistres-machine-learning-/actions/workflows/deploy-interactive.yml/badge.svg)](https://github.com/fleury-fcn/prediction-sinistres-machine-learning-/actions/workflows/deploy-interactive.yml)
 
-[![🚀 Essayer la démo en direct](https://img.shields.io/badge/%F0%9F%9A%80%20Essayer%20la%20d%C3%A9mo%20en%20direct-Streamlit-red?style=for-the-badge)](https://prediction-sinistres-machine-learning.streamlit.app)
+[![🚀 Déployer la démo Streamlit](https://img.shields.io/badge/%F0%9F%9A%80%20D%C3%A9ployer%20la%20d%C3%A9mo%20Streamlit-red?style=for-the-badge)](https://share.streamlit.io)
 
 ## 🌍 Quick Access (FR/EN)
 
 ### 🇫🇷 Français
 
-- Démo interactive Streamlit : <https://prediction-sinistres-machine-learning.streamlit.app>
+- Démo interactive Streamlit : en cours de déploiement (créer l'app depuis <https://share.streamlit.io>).
 - Visualisations Plotly (GitHub Pages) : <https://fleury-fcn.github.io/prediction-sinistres-machine-learning-/interactive/>
 - Résultats lisibles directement dans ce README : tableau comparatif + PNG statiques.
 
 ### 🇬🇧 English
 
-- Live Streamlit demo: <https://prediction-sinistres-machine-learning.streamlit.app>
+- Live Streamlit demo: deployment pending (create the app from <https://share.streamlit.io>).
 - Interactive Plotly pages: <https://fleury-fcn.github.io/prediction-sinistres-machine-learning-/interactive/>
 - This README includes quick static results: model table + PNG fallbacks.
 

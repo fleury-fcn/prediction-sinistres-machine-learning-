@@ -19,7 +19,7 @@ MODEL_PATH = RESULTS_DIR / "random_forest_model.joblib"
 RESULTS_DIR.mkdir(parents=True, exist_ok=True)
 INTERACTIVE_RESULTS_DIR.mkdir(parents=True, exist_ok=True)
 
-STREAMLIT_DEMO_URL = "https://prediction-sinistres-machine-learning.streamlit.app"
+STREAMLIT_DEMO_URL = "https://share.streamlit.io"
 
 # ------------------------------------------------------------
 # Colonnes
