@@ -1,0 +1,8 @@
+*
+!requirements-api.txt
+!configs/
+!src/
+!api/
+!examples/
+!results/models/
+**/__pycache__
