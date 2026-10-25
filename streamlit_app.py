@@ -87,8 +87,12 @@ with tab_results:
     results_md = config.METRICS_DIR / "real_results.md"
     if results_md.exists():
         st.markdown(results_md.read_text())
-    for name in ["real_roc_pr_curves", "real_metrics_ci", "real_cost_vs_threshold",
-                 "real_shap_by_feature"]:
+    for name in [
+        "real_roc_pr_curves",
+        "real_metrics_ci",
+        "real_cost_vs_threshold",
+        "real_shap_by_feature",
+    ]:
         path = config.FIGURES_DIR / f"{name}.png"
         if path.exists():
             st.image(str(path))

@@ -150,7 +150,7 @@ def roc_pr_curves(
     ax1.plot([0, 1], [0, 1], color=AXIS, lw=1, linestyle=":")
     ax2.axhline(prevalence, color=AXIS, lw=1, linestyle=":")
     ax2.text(
-        1.0, prevalence + 0.015, f"no-skill = {prevalence:.2f}", ha="right", color=MUTED, fontsize=8
+        0.01, prevalence - 0.04, f"no-skill = {prevalence:.2f}", ha="left", color=MUTED, fontsize=8
     )
     ax1.set(xlabel="False positive rate", ylabel="True positive rate", xlim=(0, 1), ylim=(0, 1.01))
     ax2.set(xlabel="Recall", ylabel="Precision", xlim=(0, 1), ylim=(0, 1.01))

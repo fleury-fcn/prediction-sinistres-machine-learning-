@@ -358,7 +358,7 @@ def fig_quality(q: pd.DataFrame, n_val: int) -> plt.Figure:
     ax3.axvline(q.trtr_pr_auc_n800.iloc[0], color=plots.INK, lw=1.2, linestyle="--")
     ax3.text(
         q.trtr_pr_auc_n800.iloc[0],
-        len(q) - 0.45,
+        -0.62,
         " TRTR (800 real rows)",
         fontsize=8,
         color=plots.INK,
@@ -400,11 +400,12 @@ def fig_scale(scale: pd.DataFrame, trtr: dict[str, float]) -> plt.Figure:
     axes[1].set_title(f"PR-AUC on a {SYNTH_TEST_ROWS:,}-row SYNTHETIC hold-out")
     axes[2].axhline(trtr["pr_auc"], color=plots.INK, lw=1.2, linestyle="--")
     axes[2].text(
-        axes[2].get_xlim()[0],
+        0.01,
         trtr["pr_auc"],
-        " LightGBM trained on 800 real rows",
+        " LightGBM trained on 800 real rows (TRTR)",
         va="bottom",
         fontsize=8,
+        transform=axes[2].get_yaxis_transform(),  # x in axes units: safe on a log axis
     )
     axes[2].set(xscale="log", xlabel="Training rows (synthetic)", ylabel="PR-AUC")
     axes[2].set_title("TSTR: PR-AUC on the REAL test split (n = 200)")

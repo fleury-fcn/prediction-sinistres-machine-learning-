@@ -145,7 +145,16 @@ def run(settings: Settings) -> dict[str, Any]:
 
     # -- calibration --------------------------------------------------------------
     calib = calibration_analysis(
-        reference, best_params, X_train, y_train, X_test, y_te, proba, focus, labels, seed
+        reference,
+        best_params,
+        X_train,
+        y_train,
+        X_test,
+        y_te,
+        proba,
+        list(dict.fromkeys([reference, "logreg"])),
+        labels,
+        seed,
     )
     calib.to_csv(config.METRICS_DIR / "real_calibration.csv", index=False)
 
