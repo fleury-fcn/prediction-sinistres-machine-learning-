@@ -13,8 +13,8 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install ruff==0.8.4 black==24.10.0
-      - run: ruff check src tests api streamlit_app.py
-      - run: black --check src tests api streamlit_app.py
+      - run: ruff check src tests api app/streamlit_app.py
+      - run: black --check src tests api app/streamlit_app.py
 
   test:
     runs-on: ubuntu-latest

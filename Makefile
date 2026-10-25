@@ -36,18 +36,18 @@ test:  ## unit tests
 	$(PYTHON) -m pytest -q
 
 lint:  ## ruff + black check
-	$(PYTHON) -m ruff check src tests api streamlit_app.py
-	$(PYTHON) -m black --check src tests api streamlit_app.py
+	$(PYTHON) -m ruff check src tests api app/streamlit_app.py
+	$(PYTHON) -m black --check src tests api app/streamlit_app.py
 
 format:  ## auto-format
-	$(PYTHON) -m black src tests api streamlit_app.py
-	$(PYTHON) -m ruff check --fix src tests api streamlit_app.py
+	$(PYTHON) -m black src tests api app/streamlit_app.py
+	$(PYTHON) -m ruff check --fix src tests api app/streamlit_app.py
 
 api:  ## serve the exported model on :8000
 	$(PYTHON) -m uvicorn api.app:app --host 0.0.0.0 --port 8000
 
 app:  ## Streamlit demo
-	$(PYTHON) -m streamlit run streamlit_app.py
+	$(PYTHON) -m streamlit run app/streamlit_app.py
 
 docker-build:  ## build the API image (needs results/models from `make evaluate`)
 	docker build -t fraud-api .

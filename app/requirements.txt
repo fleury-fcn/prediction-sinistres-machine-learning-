@@ -1,0 +1,15 @@
+# Dependencies of the Streamlit app only (Streamlit Community Cloud reads this file
+# because it sits next to the entry point). No torch / SDV / training libraries.
+streamlit==1.40.2
+numpy==1.26.4
+pandas==2.2.3
+scipy==1.14.1
+scikit-learn==1.5.2
+imbalanced-learn==0.12.4
+catboost==1.2.7
+joblib==1.4.2
+pyyaml==6.0.3
+# streamlit would otherwise pull a pyarrow that requires numpy >= 2
+pyarrow==18.1.0
+# catboost depends on matplotlib; keep the version built against numpy 1.x
+matplotlib==3.9.2

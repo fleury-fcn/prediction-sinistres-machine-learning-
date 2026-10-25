@@ -22,6 +22,7 @@ ignore = ["B008", "NPY002"]
 
 [tool.ruff.lint.per-file-ignores]
 "src/plots.py" = ["E402"]
+"app/streamlit_app.py" = ["E501"]  # long bilingual UI strings
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
