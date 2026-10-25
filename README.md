@@ -6,15 +6,7 @@
 ![PyTorch](https://img.shields.io/badge/PyTorch-2.2-EE4C2C?logo=pytorch&logoColor=white)
 ![License: data public](https://img.shields.io/badge/data-public%20benchmark-lightgrey)
 
-> **Résumé (FR).** Détection de fraude sur 1 000 sinistres automobiles publics. Neuf modèles
-> (régressions logistiques, forêts, boostings, CatBoost, MLP PyTorch, stacking) sont optimisés
-> avec le même budget Optuna, comparés par validation croisée répétée et tests statistiques,
-> puis évalués une seule fois sur un jeu de test tenu à l'écart. Le meilleur modèle atteint une
-> ROC-AUC de 0,84 [0,77 ; 0,90] et une PR-AUC de 0,55 [0,46 ; 0,71] sur le test (contre 0,50 de
-> ROC-AUC pour la version précédente du projet), mais **aucun modèle n'est significativement
-> meilleur que les autres** et le signal repose presque entièrement sur deux variables. Un jeu
-> **synthétique** de 500 000 lignes sert uniquement aux tests de montée en charge : il n'apporte
-> aucune information nouvelle sur la fraude réelle, ce que le protocole TSTR confirme.
+**🇬🇧 English** · [🇫🇷 Version française](README.fr.md)
 
 **In three lines.** On the public 1,000-claim fraud dataset, nine models tuned with an
 identical Optuna budget all land within a few PR-AUC points of each other; the best one
@@ -75,6 +67,22 @@ every claim* = 1,000 USD/claim. Fraud prevalence (the PR-AUC of a random model) 
   honest comparison point, not as the recommended model.
 * **Two features carry the signal** (see interpretation). Removing `insured_hobbies` drops CV
   PR-AUC from 0.71 to 0.50; removing `incident_severity` drops it to 0.54.
+
+### Explore the results interactively
+
+A bilingual (FR/EN) Streamlit app presents the whole study: overview, data, model comparison
+with confidence intervals and statistical tests, a **business-cost simulator** (change the
+investigation / missed-fraud costs and the threshold), SHAP interpretation, the synthetic-data
+block, and **live scoring of a claim** with its local explanation.
+
+```bash
+make app        # or: streamlit run app/streamlit_app.py
+```
+
+The app only reads versioned files and has its own light dependencies
+([`app/requirements.txt`](app/requirements.txt)), so it can be deployed for free on
+[Streamlit Community Cloud](https://share.streamlit.io) with `app/streamlit_app.py` as entry
+point (Python 3.12).
 
 ---
 
@@ -428,7 +436,7 @@ cd prediction-sinistres-machine-learning-
 python3.12 -m venv .venv && source .venv/bin/activate
 make install          # pinned requirements (Python 3.12)
 make all              # eda → train → evaluate → synth, then executes the notebooks
-make test lint        # 43 unit tests, ruff + black
+make test lint        # unit tests (incl. leakage and app smoke tests), ruff + black
 ```
 
 * `python -m src.main --stage {eda,train,evaluate,synth,all} [--fast]`; `--fast` runs the
@@ -468,8 +476,10 @@ make test lint        # 43 unit tests, ruff + black
 │   ├── figures/                every figure shown here
 │   ├── metrics/                every number shown here (CSV / JSON / Markdown)
 │   └── models/                 exported CatBoost pipeline + model card
-├── api/app.py                  FastAPI service      ├── streamlit_app.py   demo app
-├── tests/                      pytest suite         ├── Dockerfile         API image
+├── app/                        Streamlit app (FR/EN) + its light requirements.txt
+├── api/app.py                  FastAPI service
+├── tests/                      pytest suite
+├── Dockerfile                  API image (no torch)
 └── Makefile, pyproject.toml, requirements*.txt, .github/workflows/ci.yml
 ```
 
@@ -482,7 +492,7 @@ curl -X POST localhost:8000/predict -H "Content-Type: application/json" -d @exam
 # {"fraud_probability": …, "flag_for_investigation": …, "decision_threshold": 0.15, "model": "CatBoost"}
 
 make docker-build docker-run               # same API in a slim image (no torch)
-make app                                   # Streamlit demo: score a claim, browse results
+make app                                   # Streamlit app (FR/EN): results, cost simulator, scoring
 ```
 
 The exported model is the best-CV model that does not need PyTorch at inference time
