@@ -4,9 +4,16 @@ __pycache__/
 venv/
 .venv/
 *.egg-info/
+.pytest_cache/
+.ruff_cache/
+.DS_Store
 
-# Données et résultats volumineux (à adapter selon ta politique de repo)
-# results/*.png
-# results/*.csv
-# results/*.joblib
-!results/.gitkeep
+# Regenerable artefacts: fitted models of every run, OOF predictions,
+# Optuna trials, local MLflow tracking, run logs
+artifacts/
+mlruns/
+logs/
+
+# Large synthetic data: regenerate with `make synth`; only the 1k sample is versioned
+data/synthetic/*
+!data/synthetic/SYNTHETIC_sample_1000.csv

@@ -1,0 +1,28 @@
+[project]
+name = "insurance-fraud-detection"
+version = "1.0.0"
+description = "Leak-free, statistically honest fraud detection on the public insurance claims dataset"
+requires-python = ">=3.11,<3.13"
+authors = [{ name = "Fleury Niyokwizera" }]
+readme = "README.md"
+
+[tool.black]
+line-length = 100
+target-version = ["py312"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+extend-exclude = ["notebooks"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "SIM", "NPY"]
+# NPY002: the global NumPy seed is set on purpose for libraries (SDV) that use it
+ignore = ["B008", "NPY002"]
+
+[tool.ruff.lint.per-file-ignores]
+"src/plots.py" = ["E402"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+filterwarnings = ["ignore::DeprecationWarning", "ignore::FutureWarning", "ignore::UserWarning"]
