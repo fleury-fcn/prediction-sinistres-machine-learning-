@@ -87,7 +87,10 @@ make app        # ou : streamlit run app/streamlit_app.py
 L'application ne lit que des fichiers versionnés et a ses propres dépendances légères
 ([`app/requirements.txt`](app/requirements.txt)) : elle peut être déployée gratuitement sur
 [Streamlit Community Cloud](https://share.streamlit.io) avec `app/streamlit_app.py` comme point
-d'entrée (Python 3.12).
+d'entrée. Choisissez **Python 3.12 dans « Advanced settings » avant de cliquer sur Deploy** : la
+version par défaut (3.14) n'a pas de paquets précompilés pour les versions épinglées, et la
+version de Python d'une application ne peut plus être changée après le déploiement (il faut la
+supprimer puis la redéployer).
 
 ---
 
