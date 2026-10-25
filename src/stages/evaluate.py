@@ -73,6 +73,10 @@ def run(settings: Settings) -> dict[str, Any]:
     names = cv_summary.index.tolist()
     fitted = {n: joblib.load(MODEL_ARTIFACTS / f"{n}.joblib") for n in names}
     proba = {n: m.predict_proba(X_test)[:, 1] for n, m in fitted.items()}
+    # test-set scores, used by the Streamlit cost simulator (exploration only)
+    pd.DataFrame(proba, index=X_test.index).assign(is_fraud=y_te).to_csv(
+        config.METRICS_DIR / "real_test_predictions.csv", index_label="row_id"
+    )
 
     # -- test metrics with bootstrap CIs ------------------------------------------
     tables = []
