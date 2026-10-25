@@ -1,0 +1,33 @@
+{
+  "n_rows": 1000,
+  "n_source_columns": 39,
+  "fraud_rate": 0.247,
+  "n_fraud": 247,
+  "duplicated_rows": 0,
+  "unknown_category_counts": {
+    "collision_type": 178,
+    "property_damage": 360,
+    "police_report_available": 343
+  },
+  "numeric_nan_counts": {
+    "umbrella_limit": 1
+  },
+  "iqr_outlier_counts": {
+    "age": 4,
+    "policy_annual_premium": 9,
+    "umbrella_limit": 201,
+    "property_claim": 6,
+    "total_claim_amount": 1
+  },
+  "total_claim_equals_sum_of_components": true,
+  "incident_date_range": [
+    "2015-01-01",
+    "2015-03-01"
+  ],
+  "univariate_roc_auc_claim_amounts": {
+    "total_claim_amount": 0.593216876085402,
+    "injury_claim": 0.5587985440155706,
+    "property_claim": 0.5893618508422451,
+    "vehicle_claim": 0.5959320612287691
+  }
+}

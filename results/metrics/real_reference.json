@@ -1,0 +1,12 @@
+{
+  "reference_model": "catboost",
+  "trivial_policies_test": {
+    "investigate_none": 2450.0,
+    "investigate_all": 1000.0
+  },
+  "costs": {
+    "investigation": 1000.0,
+    "missed_fraud": 10000.0
+  },
+  "bayes_threshold": 0.1
+}

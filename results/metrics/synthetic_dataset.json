@@ -1,0 +1,10 @@
+{
+  "generator": "gaussian_copula_custom",
+  "n_rows": 500000,
+  "path": "data/synthetic/SYNTHETIC_claims_gaussian_copula_custom_500000.parquet",
+  "fitted_on": "real training split (800 rows)",
+  "rules_enforced": [
+    "collision_type UNKNOWN iff incident is theft / parked car"
+  ],
+  "fraud_rate": 0.2475
+}

@@ -1,0 +1,10 @@
+cost_ratio,threshold,model_cost,best_trivial_cost,best_trivial_policy,savings_pct
+2.0,0.46,430.0,490.0,investigate_none,12.244897959183673
+3.0,0.15,435.0,735.0,investigate_none,40.816326530612244
+5.0,0.15,505.0,1000.0,investigate_all,49.5
+7.5,0.15,592.5,1000.0,investigate_all,40.75
+10.0,0.15,680.0,1000.0,investigate_all,32.0
+15.0,0.15,855.0,1000.0,investigate_all,14.5
+20.0,0.15,1030.0,1000.0,investigate_all,-3.0
+30.0,0.01,1000.0,1000.0,investigate_all,0.0
+50.0,0.01,1000.0,1000.0,investigate_all,0.0

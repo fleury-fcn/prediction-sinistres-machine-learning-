@@ -1,0 +1,110 @@
+{
+  "model": "catboost",
+  "label": "CatBoost",
+  "params": {
+    "iterations": 400,
+    "learning_rate": 0.024794666616548063,
+    "depth": 7,
+    "l2_leaf_reg": 7.967067886276945,
+    "random_strength": 1.0169322827507288,
+    "bagging_temperature": 1.4259890502146857,
+    "imbalance": "none"
+  },
+  "decision_threshold": 0.15,
+  "threshold_rule": "minimises expected cost on training out-of-fold predictions",
+  "costs_usd": {
+    "investigation": 1000.0,
+    "missed_fraud": 10000.0
+  },
+  "cv": {
+    "label": "CatBoost",
+    "cv_pr_auc_mean": 0.7069924367759346,
+    "cv_pr_auc_sd": 0.0544353063829556,
+    "cv_roc_auc_mean": 0.8776038832379741,
+    "cv_roc_auc_sd": 0.0319625393548363,
+    "cv_brier_mean": 0.1016180556029387,
+    "oof_cost_threshold": 0.15,
+    "fit_seconds": 4.771948960880218,
+    "tuning_seconds": 485.6661715970004
+  },
+  "test_metrics": {
+    "pr_auc": {
+      "estimate": 0.5530147414664888,
+      "ci_low": 0.46263426145222314,
+      "ci_high": 0.7084944917012249
+    },
+    "roc_auc": {
+      "estimate": 0.8394377618597106,
+      "ci_low": 0.7692931477226652,
+      "ci_high": 0.9024192458440329
+    },
+    "f1": {
+      "estimate": 0.7304347826086957,
+      "ci_low": 0.65,
+      "ci_high": 0.80734827099506
+    },
+    "precision": {
+      "estimate": 0.6363636363636364,
+      "ci_low": 0.5526315789473685,
+      "ci_high": 0.7333593749999998
+    },
+    "recall": {
+      "estimate": 0.8571428571428571,
+      "ci_low": 0.7551020408163265,
+      "ci_high": 0.9387755102040817
+    },
+    "mcc": {
+      "estimate": 0.638621478973451,
+      "ci_low": 0.5248965558755123,
+      "ci_high": 0.7464926834265161
+    },
+    "brier": {
+      "estimate": 0.12367072256426505,
+      "ci_low": 0.09587117511540659,
+      "ci_high": 0.15326298673894725
+    },
+    "cost_per_claim": {
+      "estimate": 680.0,
+      "ci_low": 480.0,
+      "ci_high": 915.0
+    }
+  },
+  "trained_on": "real data, training split (800 claims)",
+  "sklearn_version": "1.5.2",
+  "input_columns": [
+    "months_as_customer",
+    "age",
+    "policy_bind_date",
+    "policy_state",
+    "policy_csl",
+    "policy_deductible",
+    "policy_annual_premium",
+    "umbrella_limit",
+    "insured_sex",
+    "insured_education_level",
+    "insured_occupation",
+    "insured_hobbies",
+    "insured_relationship",
+    "capital_gains",
+    "capital_loss",
+    "incident_date",
+    "incident_type",
+    "collision_type",
+    "incident_severity",
+    "authorities_contacted",
+    "incident_state",
+    "incident_city",
+    "incident_hour",
+    "number_of_vehicles_involved",
+    "property_damage",
+    "bodily_injuries",
+    "witnesses",
+    "police_report_available",
+    "injury_claim",
+    "property_claim",
+    "vehicle_claim",
+    "auto_make",
+    "auto_model",
+    "auto_year"
+  ]
+}
