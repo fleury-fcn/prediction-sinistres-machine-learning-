@@ -1,5 +1,6 @@
 # Insurance claim fraud detection: a leak-free, statistically honest benchmark
 
+[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://fraude-sinistres.streamlit.app/)
 [![CI](https://github.com/fleury-fcn/prediction-sinistres-machine-learning-/actions/workflows/ci.yml/badge.svg)](https://github.com/fleury-fcn/prediction-sinistres-machine-learning-/actions/workflows/ci.yml)
 ![Python](https://img.shields.io/badge/python-3.12-3776AB?logo=python&logoColor=white)
 ![scikit-learn](https://img.shields.io/badge/scikit--learn-1.5-F7931E?logo=scikit-learn&logoColor=white)
@@ -69,6 +70,8 @@ every claim* = 1,000 USD/claim. Fraud prevalence (the PR-AUC of a random model) 
   PR-AUC from 0.71 to 0.50; removing `incident_severity` drops it to 0.54.
 
 ### Explore the results interactively
+
+**Live app: <https://fraude-sinistres.streamlit.app/>**
 
 A bilingual (FR/EN) Streamlit app presents the whole study: overview, data, model comparison
 with confidence intervals and statistical tests, a **business-cost simulator** (change the

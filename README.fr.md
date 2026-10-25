@@ -1,5 +1,6 @@
 # Détection de fraude sur sinistres automobiles : un benchmark sans fuite et statistiquement honnête
 
+[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://fraude-sinistres.streamlit.app/)
 [![CI](https://github.com/fleury-fcn/prediction-sinistres-machine-learning-/actions/workflows/ci.yml/badge.svg)](https://github.com/fleury-fcn/prediction-sinistres-machine-learning-/actions/workflows/ci.yml)
 ![Python](https://img.shields.io/badge/python-3.12-3776AB?logo=python&logoColor=white)
 ![scikit-learn](https://img.shields.io/badge/scikit--learn-1.5-F7931E?logo=scikit-learn&logoColor=white)
@@ -73,6 +74,8 @@ Règles simples sur le même test : *ne rien enquêter* = 2 450 USD/sinistre, *t
   passer la PR-AUC de CV de 0,71 à 0,50 ; retirer `incident_severity` la fait tomber à 0,54.
 
 ### Explorer les résultats de façon interactive
+
+**Application en ligne : <https://fraude-sinistres.streamlit.app/>**
 
 Une application Streamlit bilingue (FR/EN) présente toute l'étude : vue d'ensemble, données,
 comparaison des modèles avec intervalles de confiance et tests statistiques, **simulateur de
