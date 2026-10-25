@@ -1,0 +1,59 @@
+# Experiment configuration. Every number reported in the README comes from a
+# run of `python -m src.main --stage all` with this file.
+# `--fast` overrides the values listed under `fast:` (smoke runs / CI only).
+
+seed: 42
+
+data:
+  raw_path: data/insurance_claims.csv
+  test_size: 0.20
+
+features:
+  # total_claim_amount == injury_claim + property_claim + vehicle_claim on every
+  # row: it is dropped as a redundant column (see README, "Leakage audit").
+  drop_total_claim_amount: true
+  # One-hot encoding: categories seen fewer times than this in the training
+  # fold are grouped into an "infrequent" bucket.
+  min_category_frequency: 10
+
+cv:
+  tuning_folds: 5          # stratified K-fold used inside each Optuna trial
+  eval_folds: 5            # repeated stratified K-fold used after tuning
+  eval_repeats: 5
+
+tuning:
+  n_trials: 40             # identical budget for every tunable model
+  pruning: true
+
+evaluation:
+  n_bootstrap: 2000
+  ci_level: 0.95
+
+# Business cost hypotheses (USD per claim). They are assumptions, not data:
+# change them here or with --cost-fn / --cost-investigation.
+costs:
+  investigation: 1000      # paid for every claim sent to investigation (TP and FP)
+  missed_fraud: 10000      # net loss when a fraudulent claim is paid (FN)
+
+synthetic:
+  n_rows: 500000
+  validation_rows: 20000   # size of each generator's sample used for quality checks
+  generators: [gaussian_copula_custom, sdv_gaussian_copula, sdv_ctgan]
+  ctgan_epochs: 300
+  scale_sizes: [1000, 10000, 100000, 500000]
+
+fast:
+  tuning:
+    n_trials: 4
+  cv:
+    tuning_folds: 3
+    eval_folds: 3
+    eval_repeats: 2
+  evaluation:
+    n_bootstrap: 200
+  synthetic:
+    n_rows: 20000
+    validation_rows: 5000
+    generators: [gaussian_copula_custom, sdv_gaussian_copula]
+    ctgan_epochs: 10
+    scale_sizes: [1000, 10000]
